@@ -15,7 +15,7 @@
 	</div>
 
 	<div class="form-group">
-		<div class="g-recaptcha" data-sitekey=""></div>
+		<div class="g-recaptcha" data-sitekey="{{ Config::get('services.recaptcha.key') }}"></div>
 	</div>
 
 	<button type="submit" class="btn btn-default btn-block btn-lg">Search</button>

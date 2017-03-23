@@ -4,9 +4,11 @@ namespace Yk\LaravelWhoisLookup\App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Config;
 use Validator;
 use Rule;
 use Response;
+
 
 class WhoisLookupController extends Controller
 {
@@ -281,7 +283,7 @@ class WhoisLookupController extends Controller
 				        'header'  => 'Content-type: application/x-www-form-urlencoded',
 				        'content' => http_build_query(
 							[
-								'secret' => '',
+								'secret' => Config::get('services.recaptcha.secret'),
 								'response' => $request->get('g-recaptcha-response'),
 								'remoteip' => $request->ip(),
 							]
