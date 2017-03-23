@@ -13,12 +13,25 @@
             </span>
         @endif
 	</div>
+
+	<div class="form-group">
+		<div class="g-recaptcha" data-sitekey=""></div>
+	</div>
+
 	<button type="submit" class="btn btn-default btn-block btn-lg">Search</button>
 </form>
 
 <br>
 
 <div id="response"></div>
+@append
+
+@section('styles')
+<style type="text/css">
+	.g-recaptcha > div{
+		margin: 0px auto;
+	}
+</style>
 @append
 
 @section('scripts')
@@ -38,13 +51,19 @@ $(function() {
 		request.done(function( response ) {
 			
 			$('#response').html('<pre>' + response.response + '</pre>');
+
+			grecaptcha.reset();
 			
 		});
 
 		request.fail(function( jqXHR, textStatus ) {
 			//alert( "Request failed: " + textStatus );
+
+			grecaptcha.reset();
 		});
 	});
 });
 </script>
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
 @append

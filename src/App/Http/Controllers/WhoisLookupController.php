@@ -271,8 +271,32 @@ class WhoisLookupController extends Controller
         	return in_array($extension, array_keys($whois));
         });
 
-        $validator = Validator::make($request->all(), [
+		$reCAPTCHA = file_get_contents(
+			'https://www.google.com/recaptcha/api/siteverify',
+			false,
+			stream_context_create(
+				['http' =>
+				    [
+				        'method'  => 'POST',
+				        'header'  => 'Content-type: application/x-www-form-urlencoded',
+				        'content' => http_build_query(
+							[
+								'secret' => '',
+								'response' => $request->get('g-recaptcha-response'),
+								'remoteip' => $request->ip(),
+							]
+						)
+				    ]
+				]
+			)
+		);
+
+		$input = $request->all();
+		$input['reCAPTCHA'] = json_decode($reCAPTCHA)->success;
+
+        $validator = Validator::make($input, [
             'domain' => 'required|min:4|domain|extension',
+            'reCAPTCHA' => 'required|accepted',
         ]);
 
         if ($validator->fails()) {
