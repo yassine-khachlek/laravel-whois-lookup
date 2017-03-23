@@ -3,8 +3,10 @@
 namespace Yk\LaravelWhoisLookup\App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+
+use Validator;
+use Rule;
+use Response;
 
 class WhoisLookupController extends Controller
 {
@@ -274,9 +276,14 @@ class WhoisLookupController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('whois-lookup')
+        	if($request->ajax())
+			{
+				return Response::json($validator->messages(), 400);
+            }else{
+            	return redirect('whois-lookup')
                         ->withErrors($validator)
                         ->withInput();
+            }
         }
 
         $domain = $request->get('domain');
@@ -296,6 +303,10 @@ class WhoisLookupController extends Controller
 		 
 		fclose($fp);
 
-		return $response;
+		if ($request->ajax()) {
+			return ['response' => $response];
+		}else{
+			return $response;
+		}		
     }
 }

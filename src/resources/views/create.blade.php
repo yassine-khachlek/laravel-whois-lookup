@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<form action="" method="POST">
+<form id="whois-lookup-form" action="" method="POST">
 	{{ method_field('POST') }}
 	{{ csrf_field() }}
 	<div class="form-group{{ $errors->has('domain') ? ' has-error' : '' }}">
@@ -24,22 +24,25 @@
 @section('scripts')
 <script type="text/javascript">
 $(function() {
-	$( "form" ).on( "submit", function( event ) {
+	$( "#whois-lookup-form" ).on( "submit", function( event ) {
 		event.preventDefault();
 
 		var request = $.ajax({
 			url: $( this ).attr('action'),
 			method: $( this ).attr('method'),
 			data: $( this ).serialize(),
-			dataType: "html"
+			dataType: "json",
+			cache: false
 		});
 
 		request.done(function( response ) {
-			$('#response').html('<pre>' + response + '</pre>');
+			
+			$('#response').html('<pre>' + response.response + '</pre>');
+			
 		});
 
 		request.fail(function( jqXHR, textStatus ) {
-			alert( "Request failed: " + textStatus );
+			//alert( "Request failed: " + textStatus );
 		});
 	});
 });
